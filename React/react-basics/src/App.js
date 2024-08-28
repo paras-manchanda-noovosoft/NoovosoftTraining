@@ -1,41 +1,123 @@
 import './App.css';
+
 import {Demo} from './Components/button';
 import Button from './Components/button.js';
 import Clock from './Components/clock';
-import {useState} from "react";
+import React,{useState} from "react";
+import Counter from './Hooks/use-state-hooks';
+import Profile from './Components/Profile';
 
-
-const obj=[{name:'paras',age:21},{name:'rachit',age:22},{name:'anuj',age:22}];
-function App() {
-    const [date,setDate]=useState(new Date());
-    const timesheet={
-        color : 'Red',
-        time : date
+const Persons=[
+    {
+        "userId":"rirani",
+        "jobTitleName":"Developer",
+        "firstName":"Romin",
+        "lastName":"Irani",
+        "preferredFullName":"Romin Irani",
+        "employeeCode":"E1",
+        "region":"CA",
+        "phoneNumber":"408-1234567",
+        "emailAddress":"romin.k.irani@gmail.com"
+    },
+    {
+        "userId":"nirani",
+        "jobTitleName":"Developer",
+        "firstName":"Neil",
+        "lastName":"Irani",
+        "preferredFullName":"Neil Irani",
+        "employeeCode":"E2",
+        "region":"CA",
+        "phoneNumber":"408-1111111",
+        "emailAddress":"neilrirani@gmail.com"
+    },
+    {
+        "userId":"thanks",
+        "jobTitleName":"Program Directory",
+        "firstName":"Tom",
+        "lastName":"Hanks",
+        "preferredFullName":"Tom Hanks",
+        "employeeCode":"E3",
+        "region":"CA",
+        "phoneNumber":"408-2222222",
+        "emailAddress":"tomhanks@gmail.com"
+    },
+    {
+        "userId":"thanks",
+        "jobTitleName":"Program Directory",
+        "firstName":"Tom",
+        "lastName":"Hanks",
+        "preferredFullName":"Tom Hanks",
+        "employeeCode":"E3",
+        "region":"CA",
+        "phoneNumber":"408-2222222",
+        "emailAddress":"tomhanks@gmail.com"
+    },
+    {
+        "userId":"thanks",
+        "jobTitleName":"Program Directory",
+        "firstName":"Tom",
+        "lastName":"Hanks",
+        "preferredFullName":"Tom Hanks",
+        "employeeCode":"E3",
+        "region":"CA",
+        "phoneNumber":"408-2222222",
+        "emailAddress":"tomhanks@gmail.com"
+    },
+    {
+        "userId":"thanks",
+        "jobTitleName":"Program Directory",
+        "firstName":"Tom",
+        "lastName":"Hanks",
+        "preferredFullName":"Tom Hanks",
+        "employeeCode":"E3",
+        "region":"CA",
+        "phoneNumber":"408-2222222",
+        "emailAddress":"tomhanks@gmail.com"
     }
+    ,
+    {
+        "userId":"thanks",
+        "jobTitleName":"Program Directory",
+        "firstName":"Tom",
+        "lastName":"Hanks",
+        "preferredFullName":"Tom Hanks",
+        "employeeCode":"E3",
+        "region":"CA",
+        "phoneNumber":"408-2222222",
+        "emailAddress":"tomhanks@gmail.com"
+    }
+    ,
+    {
+        "userId":"thanks",
+        "jobTitleName":"Program Directory",
+        "firstName":"Tom",
+        "lastName":"Hanks",
+        "preferredFullName":"Tom Hanks",
+        "employeeCode":"E3",
+        "region":"CA",
+        "phoneNumber":"408-2222222",
+        "emailAddress":"tomhanks@gmail.com"
+    }];
+
+
+function App() {
+
   return (
 
-      <div>
-          <article>
-              <h1>My First Component</h1>
-              <ol>
-                  <li>Components: UI Building Blocks</li>
-                  <li>Defining a Component</li>
-                  <li>Using a Component</li>
-              </ol>
-          </article>
-          <Button/>
-          <Demo/>
-          {/*{*/}
-          {/*    obj.map((x)=>{*/}
-          {/*        console.log(x["name"]+" "+x["age"]);*/}
-          {/*    })*/}
-          {/*      while(true){*/}
-          {/*        setTimeout(()=>{*/}
-          {/*            setDate(new Date());*/}
-          {/*       },1000);*/}
-          {/*   }*/}
-          {/*}*/}
-          <Clock {...timesheet} />
+      <div className="app">
+          <h1 className="heading"> Working Of Component</h1>
+          <div className="profile-section">
+          {
+              Persons.map((person)=>{
+                  return <Profile {...person} />
+              })
+          }
+          </div>
+
+          <h1 className="heading"> Working Of Hooks</h1>
+          <ol>
+              <Counter/>
+          </ol>
       </div>
   );
 }
