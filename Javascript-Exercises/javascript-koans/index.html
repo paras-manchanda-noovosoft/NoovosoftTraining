@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+   <button id="hide_button" onclick="hideButton();">Click Me</button>
+
+   <script>
+       function hideButton() {
+           let button = document.getElementById("hide_button");
+           button.style.display = "none";
+       }
+
+       const h1tag = document.createElement("h1");
+       const h1content = document.createTextNode("This is a new h1 tag.");
+       h1tag.appendChild(h1content);
+       const element = document.getElementById("hide_button");
+       element.appendChild(h1tag);
+   </script>
+
+</body>
+</html>
