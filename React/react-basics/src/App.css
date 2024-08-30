@@ -77,3 +77,14 @@
     font-size: 0.9em;
     margin: 5px 0;
 }
+
+.move-dot{
+    position: absolute;
+    background-color: red;
+    border-radius : 50%;
+    width: 20px;
+    height: 20px;
+}
+
+/* css for mode.js */
+
