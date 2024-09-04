@@ -1,0 +1,67 @@
+/* search box css */
+.search-box {
+    width: 60%;
+    padding: 0 10px;
+}
+
+/* Search bar css */
+.search-bar {
+    margin: 20px;
+    display: flex;
+    justify-content: space-around;
+    height: 3vh;
+}
+
+/* Additional styling for ProductList components */
+.product-item {
+    display: flex;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.product-thumbnail {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.product-details {
+    flex-grow: 1;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #888;
+}
+
+/* button cart */
+
+.add-cart {
+    background-color: #5abd5b;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    font-family: Arial, serif;
+    cursor: pointer;
+}
+
+.remove-cart {
+    background-color: #ea5f5f;
+}
+
+.user-cart {
+    display: flex;
+    align-self: center;
+    gap: 10px;
+}
+
+.user-cart-quantity-button {
+    align-self: center;
+    cursor: pointer;
+
+}
+  
