@@ -1,0 +1,90 @@
+* {
+  margin:0;
+  padding:0;
+}
+.app {
+  padding:10px;
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+  align-items: center;
+}
+
+.heading {
+  background-color: cadetblue;
+  color: white;
+  width:100%;
+  text-align: center;
+  padding: 10px;
+}
+
+.btn {
+    padding: 5px;
+    color: white;
+    background-color: #e0976f;
+    border-radius: 5px;
+    border-width: 0;
+}
+
+.profile-section{
+    display:flex;
+    flex-wrap: wrap;
+    width:100%;
+    align-items: center;
+}
+.profile-card {
+    width: 23%;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+}
+
+/* Profile Header */
+.profile-header {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 20px;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.name {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+/* Profile Body */
+.profile-body {
+    padding: 20px;
+}
+
+.email {
+    color: #555;
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+.job-role {
+    color: #777;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.move-dot{
+    position: absolute;
+    background-color: red;
+    border-radius : 50%;
+    width: 20px;
+    height: 20px;
+}
+
+/* css for mode.js */
+
