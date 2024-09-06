@@ -1,8 +1,8 @@
 import React from 'react';
-import CartComponent from "./cartComponent";
+import CartComponent from "./CartComponent";
 import {observer} from "mobx-react";
 import {useNavigate} from "react-router-dom";
-import {ICartType} from "./interfaces";
+import {ICartType} from "../types/cartTypes";
 
 const Cart = observer(({cartStore, productStore}: { cartStore: any, productStore: any }) => {
     const cartLength: number = cartStore.length();
@@ -15,9 +15,9 @@ const Cart = observer(({cartStore, productStore}: { cartStore: any, productStore
                 <button className="go-back-from-cart" onClick={() => navigate(-1)}>Go back</button>
             </div>
             {cartLength === 0 ? (
-                <p>There are no items to display</p>
+                <p style={{textAlign:"center"}}>There are no items to display</p>
             ) : (
-                cartProduct.map((data : ICartType) => {
+                cartProduct.map((data: ICartType) => {
                     return <CartComponent product={data.productDetail} key={data.productDetail.id}
                                           cartStore={cartStore}/>
                 }))

@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import {IFetchData, IProduct} from "./interfaces";
+import {IFetchProductData,IProduct} from "../types/productTypes";
 
 class ProductStore {
     productsDetails: IProduct[] = [];
@@ -15,7 +15,7 @@ class ProductStore {
 
     async fetchUsers() {
         try {
-            const response = await fetch(this.userUrl);
+            const response = await fetch(`${this.userUrl}`,{method:'GET'});
             return await response.json();
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -24,9 +24,9 @@ class ProductStore {
 
     async fetchProductDetails() {
         try {
-            const response = await fetch(this.fetchUrl);
+            const response = await fetch(this.fetchUrl,{method:'GET'});
             const productData = await response.json();
-            const productInventory: IProduct[] = productData["products"].map((data: IFetchData) => {
+            const productInventory: IProduct[] = productData["products"].map((data: IFetchProductData) => {
                 return ({
                     product_name: data.title,
                     product_tags: data.tags,
@@ -69,7 +69,6 @@ class ProductStore {
             if (!data) {
                 throw new Error("error")
             }
-            const user = localStorage.getItem("user");
             localStorage.setItem('user', this.user);
             this.user = data["firstName"] + " " + data["maidenName"];
         } catch (e) {
@@ -93,7 +92,6 @@ class ProductStore {
                 throw new Error("error")
             }
             data.splice(0, 0, 'all');
-            console.log(data);
             this.categoryList = data;
         } catch (e) {
             console.log(e);

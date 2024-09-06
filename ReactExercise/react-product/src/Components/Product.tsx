@@ -1,8 +1,16 @@
 import {observer} from 'mobx-react';
 import React from 'react';
-import {IProduct} from "./interfaces";
+import {ICartType} from "../types/cartTypes";
+import {IProduct} from "../types/productTypes";
 
-const Product = observer( ({product, cartStore}: {product : IProduct, cartStore : any}) => {
+const Product = observer(({product, cartStore}: { product: IProduct, cartStore: any }) => {
+    const handleAddCart = () => {
+        cartStore.addToCart(product);
+    }
+    const handleDeleteCart = () => {
+        cartStore.deleteFromCart(product.id);
+    }
+
     return (
         <>
             <div className="product-item">
@@ -19,12 +27,12 @@ const Product = observer( ({product, cartStore}: {product : IProduct, cartStore 
                     <p>Category: {product.category}</p>
                     <p>{product.description}</p>
                     <p>Rating: {product.rating}</p>
-                    {cartStore.checkCart(product.id)? (
-                        <button className="add-cart remove-cart" onClick={()=>  cartStore.addToCart(product)}>
+                    {cartStore.cartStoreDetails.find((item: ICartType) => item.productDetail.id === product.id) ? (
+                        <button className="add-cart remove-cart" onClick={handleDeleteCart}>
                             Remove from Cart
                         </button>
                     ) : (
-                        <button className="add-cart" onClick={() => cartStore.deleteFromCart(product.id)}>
+                        <button className="add-cart" onClick={handleAddCart}>
                             Add to Cart
                         </button>
                     )}

@@ -1,22 +1,25 @@
 import {action, computed, makeObservable, observable, toJS} from 'mobx';
-import {IProduct} from "./interfaces";
-import {ICartType} from "./interfaces";
+import {IProduct} from "../types/productTypes";
+import {ICartType} from "../types/cartTypes";
 
-class CartStore {
+class Cartstore {
+    cartStoreDetails: ICartType[] = [];
 
-    // @ts-ignore
-    cartStoreDetails: ICartType[] = JSON.parse(localStorage.getItem('cart_details'));
     constructor() {
         makeObservable(this,
             {
                 cartStoreDetails: observable,
                 addToCart: action,
                 deleteFromCart: action,
-                checkCart: action,
-                setCheckCart : action,
+                setCheckCart: action,
                 length: action,
                 cartDetails: computed
             });
+        const storedCartDetails: string | null = localStorage.getItem('cart_details');
+
+        if (storedCartDetails !== null) {
+            this.cartStoreDetails = JSON.parse(storedCartDetails) as ICartType[];
+        }
     }
 
     addToCart(item: IProduct) {
@@ -25,8 +28,7 @@ class CartStore {
                 productDetail: item,
                 isCart: true
             });
-
-        localStorage.setItem('cart_details',JSON.stringify(this.cartStoreDetails));
+        localStorage.setItem('cart_details', JSON.stringify(this.cartStoreDetails));
     }
 
     get cartDetails(): ICartType[] {
@@ -35,11 +37,7 @@ class CartStore {
 
     deleteFromCart(id: number) {
         this.cartStoreDetails = this.cartStoreDetails.filter((data: ICartType) => data["productDetail"].id !== id);
-        localStorage.setItem('cart_details',JSON.stringify(this.cartStoreDetails));
-    }
-
-    checkCart(id: number): boolean {
-        return this.cartStoreDetails.some((item: ICartType) => item.productDetail.id === id)
+        localStorage.setItem('cart_details', JSON.stringify(this.cartStoreDetails));
     }
 
     setCheckCart(exp: boolean, id: number): void {
@@ -51,4 +49,4 @@ class CartStore {
     }
 }
 
-export default CartStore;
+export default Cartstore;

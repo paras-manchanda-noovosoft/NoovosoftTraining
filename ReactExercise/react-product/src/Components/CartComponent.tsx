@@ -1,11 +1,9 @@
 import {observer} from 'mobx-react';
 import React from 'react';
-import {IProduct} from "./interfaces";
+import {IProduct} from "../types/productTypes";
 
-
-const CartComponent= observer( ({product, cartStore}: {product : IProduct, cartStore: any}) => {
-
-    const handleDeleteCart=(e : React.MouseEvent<HTMLButtonElement>) => {
+const CartComponent = observer(({product, cartStore}: { product: IProduct, cartStore: any }) => {
+    const handleDeleteCart = () => {
         cartStore.deleteFromCart(product.id);
     }
     return (
@@ -25,7 +23,7 @@ const CartComponent= observer( ({product, cartStore}: {product : IProduct, cartS
                     <p>{product.description}</p>
                     <p>Rating: {product.rating}</p>
                     <button className="add-cart remove-cart" onClick={handleDeleteCart}>
-                            Remove from Cart
+                        Remove from Cart
                     </button>
                 </div>
             </div>
