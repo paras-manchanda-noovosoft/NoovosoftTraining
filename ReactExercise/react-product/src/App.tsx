@@ -4,8 +4,7 @@ import {initRouter} from './Components/RouterStore';
 import {RouterContext, RouterView} from 'mobx-state-router';
 import {viewMap} from "./Components/viewMap";
 import RootStore from "./RootStore";
-import { createContext } from 'react';
-import rootStore from "./RootStore";
+import { createContext } from 'react'
 const rootstore=new RootStore();
 export const RootContext=createContext(rootstore);
 

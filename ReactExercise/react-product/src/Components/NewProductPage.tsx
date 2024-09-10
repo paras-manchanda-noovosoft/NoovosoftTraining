@@ -1,6 +1,5 @@
 import React, {useContext, useEffect} from 'react';
 import {observer} from 'mobx-react';
-import NewProductFormValidation from './NewProductFormValidation';
 import CategoryDropDown from './CategoryDropDown';
 import {IProduct} from "../types/productTypes";
 import {runInAction} from "mobx";
