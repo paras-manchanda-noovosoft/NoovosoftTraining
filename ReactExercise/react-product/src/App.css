@@ -28,7 +28,7 @@
 }
 
 .product-details {
-    flex-grow: 1;
+    width:60%;
 }
 
 .original-price {
@@ -59,7 +59,7 @@
     gap: 10px;
 }
 
-.user-cart-quantity-button {
+button {
     align-self: center;
     cursor: pointer;
 }
@@ -82,4 +82,79 @@
 .add-cart-page{
     padding: 10px ;
 }
-  
+
+.new-product{
+    display: flex;
+    justify-content: space-around;
+    margin: 30px;
+}
+
+/* form css */
+
+.add-cart-page {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top:3%;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-cart-page h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.add-form div {
+    margin-bottom: 15px;
+}
+
+.add-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.add-form input[type="text"],
+.add-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.add-form input[type="text"]:focus,
+.add-form input[type="number"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.add-form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.add-form p {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 0;
+}

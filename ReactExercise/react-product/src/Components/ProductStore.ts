@@ -1,13 +1,13 @@
 import {makeAutoObservable} from 'mobx';
-import {IFetchProductData,IProduct} from "../types/productTypes";
+import {IFetchProductData, IProduct} from "../types/productTypes";
 
 class ProductStore {
-    productsDetails: IProduct[] = [];
     categoryList: string[] = [];
     userUrl: string = 'https://dummyjson.com/users/5';
     user: string = '';
     fetchUrl: string = 'https://dummyjson.com/products';
     search: string = "";
+    productsDetails: IProduct[] = [];
 
     constructor() {
         makeAutoObservable(this);
@@ -15,7 +15,7 @@ class ProductStore {
 
     async fetchUsers() {
         try {
-            const response = await fetch(`${this.userUrl}`,{method:'GET'});
+            const response = await fetch(`${this.userUrl}`, {method: 'GET'});
             return await response.json();
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -24,7 +24,7 @@ class ProductStore {
 
     async fetchProductDetails() {
         try {
-            const response = await fetch(this.fetchUrl,{method:'GET'});
+            const response = await fetch(this.fetchUrl, {method: 'GET'});
             const productData = await response.json();
             const productInventory: IProduct[] = productData["products"].map((data: IFetchProductData) => {
                 return ({
@@ -57,7 +57,46 @@ class ProductStore {
                 localStorage.setItem('last_product_detail', JSON.stringify(result));
             }
 
-            this.productsDetails = result;
+            const new_added_products = localStorage.getItem('new-products');
+            this.productsDetails = [];
+            if (new_added_products !== null) {
+                JSON.parse(new_added_products).map((new_product: IProduct) => {
+                    this.productsDetails.push(new_product);
+                })
+            }
+            result.forEach((product) => {
+                this.productsDetails.push(product);
+            });
+
+            const deletedProductsList = localStorage.getItem('deleteProducts');
+            if (deletedProductsList !== null) {
+                const deletedProducts = JSON.parse(deletedProductsList);
+
+                this.productsDetails = this.productsDetails.filter((product: IProduct) => {
+                    return !deletedProducts.some((deletedProduct: { id: string }) => +deletedProduct.id === product.id);
+                });
+            }
+
+            const updatedProductsList=localStorage.getItem('updateProducts');
+            if(updatedProductsList !== null){
+                const updatedProducts=JSON.parse(updatedProductsList);
+
+                this.productsDetails = this.productsDetails.map(existingProduct => {
+                    const updatedProduct = updatedProducts.find((product :IProduct)=> product.id === existingProduct.id);
+
+                    if (updatedProduct) {
+                        return {
+                            ...existingProduct,
+                            ...updatedProduct,
+                            tags: existingProduct.product_tags,
+                            thumbnail: existingProduct.thumbnail,
+                            ratings: existingProduct.rating
+                        };
+                    }
+                    return existingProduct;
+                });
+            }
+
         } catch (e) {
             console.log(e);
         }
@@ -105,6 +144,23 @@ class ProductStore {
     setFetchUrl(url: string) {
         this.fetchUrl = url;
     }
-}
 
+    deleteProduct(id: number) {
+        const alreadyDeletedProducts = localStorage.getItem('deleteProducts');
+        const products = alreadyDeletedProducts ? JSON.parse(alreadyDeletedProducts) : [];
+        const obj = this.productsDetails.find((product: IProduct) => product.id === id);
+        const alreadyAddedProducts = localStorage.getItem('new-products');
+        let addedProducts = alreadyAddedProducts ? JSON.parse(alreadyAddedProducts) : [];
+
+        const newlyAddedProduct = this.productsDetails.find((product: IProduct) => product.id === id);
+        if (newlyAddedProduct) {
+            addedProducts = addedProducts.filter((addedProduct: IProduct) => addedProduct.id !== id);
+            localStorage.setItem('new-products', JSON.stringify(addedProducts));
+        }
+            // @ts-ignore
+            products.push(obj);
+            localStorage.setItem('deleteProducts', JSON.stringify(products));
+            this.productsDetails = this.productsDetails.filter((product) => product.id !== id);
+    }
+}
 export default ProductStore;

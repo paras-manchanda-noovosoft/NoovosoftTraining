@@ -5,8 +5,8 @@ export interface IProduct {
     category: string,
     price: number,
     discount: number,
-    thumbnail: string,
-    rating: number,
+    thumbnail : string,
+    rating : number,
     id: number
 }
 
@@ -17,7 +17,7 @@ export interface IFetchProductData {
     description: string,
     category: string,
     price: number,
-    thumbnail?: string,
+    thumbnail: string,
     rating: number,
     id: number
 }
