@@ -4,13 +4,15 @@ import Product from './Product';
 import {IProduct} from "../types/productTypes";
 import {observer} from "mobx-react";
 import {useNavigate} from "react-router-dom";
-import product from "./Product";
+import cartstore from "./Cartstore";
+import ProductStore from "./ProductStore";
+import Cartstore from "./Cartstore";
 
-const HomePage = observer(({cartStore, productStore}: { cartStore: any, productStore: any }) => {
+
+const HomePage = observer(({cartStore, productStore}: { cartStore: Cartstore, productStore: ProductStore }) => {
     const navigate = useNavigate();
     const baseProductUrl: string = 'https://dummyjson.com/products';
     const searchBaseUrl: string = 'https://dummyjson.com/products/search?q=';
-
     useEffect(() => {
         productStore.setProductDetails();
     }, [productStore.fetchUrl]);
@@ -43,9 +45,16 @@ const HomePage = observer(({cartStore, productStore}: { cartStore: any, productS
         }
     };
 
-    const handleSearchData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const deleteProduct=(id : number)=>{
+        productStore.deleteProduct(id);
+    }
 
+    const handleSearchData = (e: React.ChangeEvent<HTMLInputElement>) => {
         productStore.setSearchBoxData(e.target.value);
+    }
+
+    const handleUpdateProduct=(id : number)=>{
+        navigate('/new-product-page', { state: { productId : id} });
     }
     return (
         <>
@@ -55,11 +64,16 @@ const HomePage = observer(({cartStore, productStore}: { cartStore: any, productS
                     <CategoryDropDown categoryData={productStore.categoryList} onSelect={handleCategoryChange}/>}
                 <div className="user-cart">
                     <p>{productStore.user}</p>
-                    <button className="user-cart-quantity-button" onClick={()=> navigate('/cart') }> User Cart {cartStore.cartStoreDetails.length}  </button>
+                    <button  onClick={()=> navigate('/cart') }> User Cart {cartStore.cartStoreDetails.length}  </button>
                 </div>
             </div>
+
+            <div className="new-product">
+                <h3>Click on this button to add an product</h3>
+                <button onClick={()=> navigate('/new-product-page')}>Add Product</button>
+            </div>
             {productStore.productsDetails !== undefined && productStore.productsDetails.map((product: IProduct, ind: number) => {
-                return <Product product={product} key={product.id} cartStore={cartStore}/>
+                return <Product product={product} key={product.id} cartStore={cartStore} deleteProduct={deleteProduct} updateProduct={handleUpdateProduct}/>
             })}
         </>
     );
