@@ -1,18 +1,20 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import CategoryDropDown from "./CategoryDropDown";
 import Product from './Product';
 import {IProduct} from "../types/productTypes";
 import {observer} from "mobx-react";
-import {useNavigate} from "react-router-dom";
-import cartstore from "./Cartstore";
-import ProductStore from "./ProductStore";
-import Cartstore from "./Cartstore";
+import { useRouterStore } from 'mobx-state-router';
+import {RootContext} from "../App";
 
 
-const HomePage = observer(({cartStore, productStore}: { cartStore: Cartstore, productStore: ProductStore }) => {
-    const navigate = useNavigate();
+const HomePage = observer(() => {
+    const routerStore = useRouterStore();
     const baseProductUrl: string = 'https://dummyjson.com/products';
     const searchBaseUrl: string = 'https://dummyjson.com/products/search?q=';
+    const rootStore=useContext(RootContext);
+    const productStore=rootStore.productstore;
+    const cartStore = rootStore.cartstore;
+
     useEffect(() => {
         productStore.setProductDetails();
     }, [productStore.fetchUrl]);
@@ -54,7 +56,7 @@ const HomePage = observer(({cartStore, productStore}: { cartStore: Cartstore, pr
     }
 
     const handleUpdateProduct=(id : number)=>{
-        navigate('/new-product-page', { state: { productId : id} });
+        routerStore.goTo('NewProductPage', { params : {productId: id.toString()}});
     }
     return (
         <>
@@ -64,15 +66,14 @@ const HomePage = observer(({cartStore, productStore}: { cartStore: Cartstore, pr
                     <CategoryDropDown categoryData={productStore.categoryList} onSelect={handleCategoryChange}/>}
                 <div className="user-cart">
                     <p>{productStore.user}</p>
-                    <button  onClick={()=> navigate('/cart') }> User Cart {cartStore.cartStoreDetails.length}  </button>
+                    <button  onClick={()=> routerStore.goTo('CartPage') }> User Cart {cartStore.cartStoreDetails.length}  </button>
                 </div>
             </div>
 
-            <div className="new-product">
-                <h3>Click on this button to add an product</h3>
-                <button onClick={()=> navigate('/new-product-page')}>Add Product</button>
+            <div className="flex-container-justify-right">
+                <button className={"primary-button"} onClick={()=> routerStore.goTo('NewProductPage',{params : {productId : "+"}})}>Add Product</button>
             </div>
-            {productStore.productsDetails !== undefined && productStore.productsDetails.map((product: IProduct, ind: number) => {
+            {productStore.productsDetails?.length && productStore.productsDetails.map((product: IProduct) => {
                 return <Product product={product} key={product.id} cartStore={cartStore} deleteProduct={deleteProduct} updateProduct={handleUpdateProduct}/>
             })}
         </>

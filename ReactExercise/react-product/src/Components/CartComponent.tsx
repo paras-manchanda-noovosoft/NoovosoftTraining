@@ -18,11 +18,11 @@ const CartComponent = observer(({product, cartStore}: { product: IProduct, cartS
                         ))}
                         )
                     </h4>
-                    <p>Price: ${product.discount} <span className="original-price">(${product.price})</span></p>
+                    <p>Price: ${product.discount} <span className="text-styling-gray">(${product.price})</span></p>
                     <p>Category: {product.category}</p>
                     <p>{product.description}</p>
                     <p>Rating: {product.rating}</p>
-                    <button className="add-cart remove-cart" onClick={handleDeleteCart}>
+                    <button className="secondary-button" onClick={handleDeleteCart}>
                         Remove from Cart
                     </button>
                 </div>

@@ -1,30 +1,25 @@
 import './App.css';
-import CartPage from "./Components/CartPage";
-import HomePage from "./Components/HomePage";
-import Cartstore from "./Components/Cartstore";
 import {observer} from "mobx-react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import ProductStore from "./Components/ProductStore";
-import NewProductPage from "./Components/NewProductPage";
 import {initRouter} from './Components/RouterStore';
-const cartStore = new Cartstore();
-const productStore=new ProductStore();
+import {RouterContext, RouterView} from 'mobx-state-router';
+import {viewMap} from "./Components/viewMap";
+import RootStore from "./RootStore";
+import { createContext } from 'react';
+import rootStore from "./RootStore";
+const rootstore=new RootStore();
+export const RootContext=createContext(rootstore);
 
 const App = observer(() => {
     const routerStore =initRouter();
+
+
     return (
         <div className="App">
-            <Router>
-                <Routes>
-                    <Route path="/" element={<HomePage cartStore={cartStore} productStore={productStore}/>}/>
-                    <Route path="/cart" element={<CartPage cartStore={cartStore} productStore={productStore}/>}/>
-                    <Route path="/new-product-page" element={<NewProductPage productStore={productStore}/>}/>
-                </Routes>
-            </Router>
-
-            {/*<RouterContext.Provider value={routerStore}>*/}
-            {/*    <RouterView viewMap={viewMap} />*/}
-            {/*</RouterContext.Provider>*/}
+            <RouterContext.Provider value ={routerStore}>
+            <RootContext.Provider value={rootstore}>
+                    <RouterView viewMap={viewMap} />
+            </RootContext.Provider>
+            </RouterContext.Provider>
         </div>
     );
 })

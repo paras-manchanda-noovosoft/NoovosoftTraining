@@ -1,16 +1,17 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {observer} from 'mobx-react';
 import NewProductFormValidation from './NewProductFormValidation';
-import {useLocation, useNavigate} from 'react-router-dom';
-import ProductStore from './ProductStore';
 import CategoryDropDown from './CategoryDropDown';
 import {IProduct} from "../types/productTypes";
 import {runInAction} from "mobx";
+import {RootContext} from "../App";
+import {useRouterStore} from "mobx-state-router";
 
-const newProductStore = new NewProductFormValidation();
-
-const NewProductPage = observer(({productStore}: { productStore: ProductStore }) => {
-
+const NewProductPage = observer(() => {
+    const routerStore = useRouterStore();
+    const rootStore=useContext(RootContext);
+    const productStore=rootStore.productstore;
+    const newProductStore = rootStore.newProductStore;
 
     useEffect(() => {
         if (product !== undefined) {
@@ -29,9 +30,18 @@ const NewProductPage = observer(({productStore}: { productStore: ProductStore })
             };
         }
     }, []);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const productId = location.state?.productId;
+    const { routerState } = routerStore;
+    const id=routerState.params.productId;
+    let productId:number;
+
+    if(id === ""){
+        productId =134494;
+    }
+    else
+    {
+        productId = Number(routerState.params.productId);
+    }
+
     const isEditMode: boolean = !!productId;
     const index: number = productStore.productsDetails.findIndex(product => product.id === productId);
     const product: IProduct = productStore.productsDetails[index];
@@ -48,7 +58,7 @@ const NewProductPage = observer(({productStore}: { productStore: ProductStore })
                 newProductStore.setAddProduct();
                 productStore.productsDetails.push(newProductStore.newProduct);
             }
-            navigate('/');
+            routerStore.goTo('HomePage');
         }
     };
 
@@ -61,14 +71,14 @@ const NewProductPage = observer(({productStore}: { productStore: ProductStore })
             <h2>{isEditMode ? 'Edit Product' : 'Add a New Product'}</h2>
             <form onSubmit={handleSubmit} className="add-form">
                 <div>
-                    <label>Name:</label>
-                    <input type="text" name="product_name"
+                    <label htmlFor="Product_Name">Name:</label>
+                    <input id="Product_Name" type="text" name="product_name"
                            onChange={(e) => runInAction(() => newProductStore.setProductName(e.target.value))} required
                            value={newProductStore.newProduct.product_name}
                     />
                 </div>
                 <div>
-                    <label>Category:</label>
+                    <label >Category:</label>
                     <CategoryDropDown categoryData={productStore.categoryList} onSelect={handleCategoryChange}
                      value ={newProductStore.newProduct.category}
                     />
@@ -76,13 +86,15 @@ const NewProductPage = observer(({productStore}: { productStore: ProductStore })
                 <div>
                     <label>Price:</label>
                     <input type="number" name="product_price" required
-                           value={newProductStore.newProduct.price}
+                           value={newProductStore.newProduct.price !==0 ? newProductStore.newProduct.price: ""}
+                           placeholder="0"
                            onChange={(e) => (newProductStore.newProduct.price = +e.target.value)}/>
                 </div>
                 <div>
                     <label>Discount Price:</label>
                     <input type="number" name="product_discount_price" required
-                           value={newProductStore.newProduct.discount}
+                           value={newProductStore.newProduct.discount !==0 ? newProductStore.newProduct.discount: ""}
+                           placeholder="0"
                            onChange={(e) => (newProductStore.newProduct.discount = +e.target.value)}/>
                 </div>
                 <div>
