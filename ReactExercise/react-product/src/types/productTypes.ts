@@ -7,7 +7,8 @@ export interface IProduct {
     discount: number,
     thumbnail : string,
     rating : number,
-    id: number
+    id: number,
+    isDeleted : boolean
 }
 
 export interface IFetchProductData {

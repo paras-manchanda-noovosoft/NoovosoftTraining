@@ -5,15 +5,17 @@ import {IProduct} from "../types/productTypes";
 import {runInAction} from "mobx";
 import {RootContext} from "../App";
 import {useRouterStore} from "mobx-state-router";
+import FormStore from "./FormStore";
 
 const NewProductPage = observer(() => {
     const routerStore = useRouterStore();
     const rootStore=useContext(RootContext);
     const productStore=rootStore.productstore;
     const newProductStore = rootStore.newProductStore;
+    const formStore : FormStore= new FormStore();
 
     useEffect(() => {
-        if (product !== undefined) {
+        if (product) {
             newProductStore.setNewProductDetails(product);
         } else {
             newProductStore.newProduct = {
@@ -25,10 +27,12 @@ const NewProductPage = observer(() => {
                 discount: 0,
                 thumbnail: "https://picsum.photos/id/0/5000/3333",
                 rating: 0,
-                id: 0
+                id: 0,
+                isDeleted : false
             };
         }
     }, []);
+
     const { routerState } = routerStore;
     const id=routerState.params.productId;
     let productId:number;
@@ -45,14 +49,13 @@ const NewProductPage = observer(() => {
     const index: number = productStore.productsDetails.findIndex(product => product.id === productId);
     const product: IProduct = productStore.productsDetails[index];
 
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (newProductStore.isFormValid()) {
             if (isEditMode) {
                 newProductStore.newProduct.id = productId;
                 newProductStore.updateProduct();
-                productStore.productsDetails[index] = newProductStore.newProduct;
+                productStore.productsDetails[index]=newProductStore.newProduct;
             } else {
                 newProductStore.setAddProduct();
                 productStore.productsDetails.push(newProductStore.newProduct);
@@ -77,27 +80,27 @@ const NewProductPage = observer(() => {
                     />
                 </div>
                 <div>
-                    <label >Category:</label>
+                    <label htmlFor="category">Category:</label>
                     <CategoryDropDown categoryData={productStore.categoryList} onSelect={handleCategoryChange}
                      value ={newProductStore.newProduct.category}
                     />
                 </div>
                 <div>
-                    <label>Price:</label>
-                    <input type="number" name="product_price" required
+                    <label htmlFor="price">Price:</label>
+                    <input id="price" type="number" name="product_price" required
                            value={newProductStore.newProduct.price !==0 ? newProductStore.newProduct.price: ""}
                            placeholder="0"
                            onChange={(e) => (newProductStore.newProduct.price = +e.target.value)}/>
                 </div>
                 <div>
-                    <label>Discount Price:</label>
-                    <input type="number" name="product_discount_price" required
+                    <label htmlFor="discount">Discount Price:</label>
+                    <input id="discount" type="number" name="product_discount_price" required
                            value={newProductStore.newProduct.discount !==0 ? newProductStore.newProduct.discount: ""}
                            placeholder="0"
                            onChange={(e) => (newProductStore.newProduct.discount = +e.target.value)}/>
                 </div>
                 <div>
-                    <label>Description:</label>
+                    <label htmlFor="description">Description:</label>
                     <textarea
                         style={{
                             textAlign: 'left',

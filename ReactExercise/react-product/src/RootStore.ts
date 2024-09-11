@@ -4,7 +4,7 @@ import NewProductFormValidation from "./Components/NewProductFormValidation";
 
 class RootStore {
     cartstore: Cartstore = new Cartstore();
-    productstore: ProductStore = new ProductStore();
+    productstore : ProductStore = new ProductStore();
     newProductStore = new NewProductFormValidation();
 }
 

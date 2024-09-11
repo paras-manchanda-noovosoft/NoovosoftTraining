@@ -3,9 +3,6 @@ const CategoryDropDown = ({categoryData, onSelect,value}: { categoryData: string
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         onSelect(event.target.value);
     };
-
-
-
     return (
         <>
             <select onChange={handleChange} value={value} required>

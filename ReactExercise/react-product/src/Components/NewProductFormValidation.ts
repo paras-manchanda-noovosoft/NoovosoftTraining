@@ -1,8 +1,8 @@
-import { makeAutoObservable } from "mobx";
-import { IProduct } from "../types/productTypes";
+import {makeAutoObservable} from "mobx";
+import {IProduct} from "../types/productTypes";
 
 class NewProductFormValidation {
-    newProduct: IProduct = {
+        newProduct: IProduct = {
         product_name: "",
         product_tags: [],
         description: "",
@@ -11,7 +11,8 @@ class NewProductFormValidation {
         discount: 0,
         thumbnail: "https://picsum.photos/id/0/5000/3333",
         rating: 0,
-        id: 0
+        id: 0,
+        isDeleted: false
     };
     errors: string[] = [];
     formChecked: boolean = false;
@@ -20,19 +21,19 @@ class NewProductFormValidation {
         makeAutoObservable(this);
     }
 
-    setNewProductDetails(product : IProduct){
-        this.newProduct.product_name=product.product_name;
-        this.newProduct.id=product.id;
-        this.newProduct.description=product.description;
-        this.newProduct.price=product.price;
-        this.newProduct.discount=product.discount;
-        this.newProduct.thumbnail=product.thumbnail;
-        this.newProduct.rating=product.rating;
-        this.newProduct.category=product.category;
+    setNewProductDetails(product: IProduct) {
+        this.newProduct.product_name = product.product_name;
+        this.newProduct.id = product.id;
+        this.newProduct.description = product.description;
+        this.newProduct.price = product.price;
+        this.newProduct.discount = product.discount;
+        this.newProduct.thumbnail = product.thumbnail;
+        this.newProduct.rating = product.rating;
+        this.newProduct.category = product.category;
     }
 
-    setProductName(str : string){
-        this.newProduct.product_name=str;
+    setProductName(str: string) {
+        this.newProduct.product_name = str;
     }
 
     validateForm() {
@@ -70,33 +71,20 @@ class NewProductFormValidation {
         this.saveProductToLocalStorage(1);
     }
 
-    saveProductToLocalStorage(id : number) {
-        const existingProducts = localStorage.getItem('new-products');
+    saveProductToLocalStorage(id: number) {
+        const existingProducts = localStorage.getItem('products');
         const products = existingProducts ? JSON.parse(existingProducts) : [];
-        const productIndex = products.findIndex((prod: IProduct) => prod.id === this.newProduct.id);
-
-        if (productIndex > -1) {
-            products[productIndex] = this.newProduct;
-        } else {
+        if (id === 0) {
             products.push(this.newProduct);
-        }
-        if(id===0){
-            localStorage.setItem('new-products', JSON.stringify(products));
-        }
-        else{
-            const alreadyUpdatedProducts = localStorage.getItem('updateProducts');
-            const products = alreadyUpdatedProducts ? JSON.parse(alreadyUpdatedProducts) : [];
-            const productInd = products.findIndex((product: IProduct) => product.id === this.newProduct.id);
-
-            if (productInd>-1) {
-                products[productIndex] = this.newProduct;
-            }
-            else{
+        } else {
+            const checkIndex = products.findIndex((product: IProduct) => product.id === this.newProduct.id);
+            if (checkIndex > -1) {
+                products[checkIndex] = this.newProduct;
+            } else {
                 products.push(this.newProduct);
             }
-
-            localStorage.setItem('updateProducts',JSON.stringify(products));
         }
+        localStorage.setItem('products', JSON.stringify(products));
     }
 }
 

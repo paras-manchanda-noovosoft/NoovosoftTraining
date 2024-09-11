@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx';
 import {IFetchProductData, IProduct} from "../types/productTypes";
+import product from "./Product";
 
 class ProductStore {
     categoryList: string[] = [];
@@ -8,6 +9,7 @@ class ProductStore {
     fetchUrl: string = 'https://dummyjson.com/products';
     search: string = "";
     productsDetails: IProduct[] = [];
+
 
     constructor() {
         makeAutoObservable(this);
@@ -36,7 +38,8 @@ class ProductStore {
                     discount: data.discountPercentage,
                     thumbnail: data.thumbnail,
                     rating: data.rating,
-                    id: data.id
+                    id: data.id,
+                    isDeleted: false
                 })
             });
             return productInventory;
@@ -52,48 +55,30 @@ class ProductStore {
                 throw new Error("error");
             }
 
-            const product_detail_last = localStorage.getItem('last_product_detail');
-            if (product_detail_last === null) {
-                localStorage.setItem('last_product_detail', JSON.stringify(result));
-            }
-
-            const new_added_products = localStorage.getItem('new-products');
+            const new_added_products = localStorage.getItem('products');
+            const existingProducts = new_added_products ? JSON.parse(new_added_products) : [];
             this.productsDetails = [];
-            if (new_added_products !== null) {
-                JSON.parse(new_added_products).map((new_product: IProduct) => {
-                    this.productsDetails.push(new_product);
-                })
-            }
-            result.forEach((product) => {
-                this.productsDetails.push(product);
+            const productsToAdd = result.filter((product) => {
+                const existingProduct = existingProducts.find((prod: IProduct) => prod.id === product.id);
+                if (existingProduct && existingProduct.isDeleted === false) {
+                    product = existingProduct;
+                    return product;
+                }
+                return !existingProduct || (existingProduct && existingProduct.isDeleted !== true);
             });
 
-            const deletedProductsList = localStorage.getItem('deleteProducts');
-            if (deletedProductsList !== null) {
-                const deletedProducts = JSON.parse(deletedProductsList);
+            this.productsDetails.push(...productsToAdd);
 
-                this.productsDetails = this.productsDetails.filter((product: IProduct) => {
-                    return !deletedProducts.some((deletedProduct: { id: string }) => +deletedProduct.id === product.id);
-                });
-            }
-
-            const updatedProductsList=localStorage.getItem('updateProducts');
-            if(updatedProductsList !== null){
-                const updatedProducts=JSON.parse(updatedProductsList);
-
-                this.productsDetails = this.productsDetails.map(existingProduct => {
-                    const updatedProduct = updatedProducts.find((product :IProduct)=> product.id === existingProduct.id);
-
-                    if (updatedProduct) {
-                        return {
-                            ...existingProduct,
-                            ...updatedProduct,
-                            tags: existingProduct.product_tags,
-                            thumbnail: existingProduct.thumbnail,
-                            ratings: existingProduct.rating
-                        };
+            if (existingProducts) {
+                existingProducts.forEach((new_product: IProduct) => {
+                    if (!new_product.isDeleted) {
+                        const ind = this.productsDetails.findIndex((product: IProduct) => product.id === new_product.id);
+                        if (ind === -1) {
+                            this.productsDetails.splice(0, 0, new_product);
+                        } else {
+                            this.productsDetails[ind] = new_product;
+                        }
                     }
-                    return existingProduct;
                 });
             }
 
@@ -101,6 +86,7 @@ class ProductStore {
             console.log(e);
         }
     }
+
 
     async setUserDetails() {
         try {
@@ -146,21 +132,21 @@ class ProductStore {
     }
 
     deleteProduct(id: number) {
-        const alreadyDeletedProducts = localStorage.getItem('deleteProducts');
-        const products = alreadyDeletedProducts ? JSON.parse(alreadyDeletedProducts) : [];
-        const obj = this.productsDetails.find((product: IProduct) => product.id === id);
-        const alreadyAddedProducts = localStorage.getItem('new-products');
-        let addedProducts = alreadyAddedProducts ? JSON.parse(alreadyAddedProducts) : [];
 
-        const newlyAddedProduct = this.productsDetails.find((product: IProduct) => product.id === id);
-        if (newlyAddedProduct) {
-            addedProducts = addedProducts.filter((addedProduct: IProduct) => addedProduct.id !== id);
-            localStorage.setItem('new-products', JSON.stringify(addedProducts));
+        const newlyProducts = localStorage.getItem('products');
+        const productsList = newlyProducts ? JSON.parse(newlyProducts) : [];
+        const index = productsList.findIndex((product: IProduct) => product.id === id);
+
+        if (index > -1) {
+            productsList.splice(index, 1);
+        } else {
+            const ind = this.productsDetails.findIndex((product) => product.id === id);
+            this.productsDetails[ind].isDeleted = true;
+            productsList.push(this.productsDetails[ind]);
         }
-            // @ts-ignore
-            products.push(obj);
-            localStorage.setItem('deleteProducts', JSON.stringify(products));
-            this.productsDetails = this.productsDetails.filter((product) => product.id !== id);
+        localStorage.setItem('products', JSON.stringify(productsList));
+        this.productsDetails = this.productsDetails.filter((product) => product.id !== id);
     }
 }
+
 export default ProductStore;

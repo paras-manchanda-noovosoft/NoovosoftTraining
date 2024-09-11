@@ -4,5 +4,5 @@ export interface IAddProductTypes {
     product_price: number,
     product_category: string,
     product_discountPrice : number,
-    id  ?: number
+    id  : number
 }
